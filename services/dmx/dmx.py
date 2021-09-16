@@ -1,6 +1,10 @@
 from DMXEnttecPro import Controller
 
 
+class DmxService:
+    pass
+
+
 class DmxControl:
     def __init__(self):
         self.dmx = Controller('/dev/ttyUSB0')

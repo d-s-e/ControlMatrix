@@ -1,5 +1,5 @@
 from enum import IntEnum
-from dmx.dmx import DmxFixture
+from services.dmx.dmx import DmxFixture
 
 
 class Channels(IntEnum):

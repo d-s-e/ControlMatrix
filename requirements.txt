@@ -17,6 +17,7 @@ more-itertools==8.9.0
 multidict==5.1.0
 pyserial==3.5
 pytz==2021.1
+pyzmq==22.3.0
 requests==2.26.0
 tempora==4.1.1
 twitchio==2.0.6
