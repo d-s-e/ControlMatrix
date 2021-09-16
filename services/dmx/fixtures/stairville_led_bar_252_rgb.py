@@ -17,9 +17,6 @@ class Channels(IntEnum):
 
 
 class StairvilleLedBar252Rgb(DmxFixture):
-    def __init__(self, channel):
-        super().__init__(channel)
-
     def reset(self):
         self.set_mode(100, False)
         self.set_color_black(False)

@@ -27,7 +27,6 @@ class TwitchBot(commands.Bot):
 
     @commands.command()
     async def hello(self, ctx: commands.Context):
-        # Send a hello back!
         await ctx.send(f'Hello {ctx.author.name}!')
 
     @commands.command()
@@ -44,7 +43,7 @@ class TwitchBot(commands.Bot):
 
     @commands.command()
     async def color_white(self, ctx: commands.Context):
-        self.queue.send('test', 'color/white')
+        self.queue.send('dmx', 'color/white')
 
 
 if __name__ == '__main__':

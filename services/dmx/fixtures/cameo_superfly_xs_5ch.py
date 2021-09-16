@@ -11,9 +11,6 @@ class Channels(IntEnum):
 
 
 class CameoSuperflyXS(DmxFixture):
-    def __init__(self, channel):
-        super().__init__(channel)
-
     def reset(self):
         self.set_channel(Channels.MASTER_DIMMER, 255)
         self.set_channel(Channels.LED_COLOR, 0)
