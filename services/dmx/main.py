@@ -32,9 +32,24 @@ class DmxService:
             elif color == 'blue':
                 self.control.fixtures['bar'].set_color_blue()
                 self.control.fixtures['flower'].set_color_blue()
+            elif color == 'cyan':
+                self.control.fixtures['bar'].set_color(0x00,0xff, 0xff)
+                self.control.fixtures['flower'].set_color_black()
+            elif color == 'magenta':
+                self.control.fixtures['bar'].set_color(0xff,0x00, 0xff)
+                self.control.fixtures['flower'].set_color_black()
+            elif color == 'yellow':
+                self.control.fixtures['bar'].set_color(0xff,0xff, 0x00)
+                self.control.fixtures['flower'].set_color_black()
+            elif color == 'pink':
+                self.control.fixtures['bar'].set_color(0xff,0xc0, 0xcb)
+                self.control.fixtures['flower'].set_color_black()
             elif color == 'white':
                 self.control.fixtures['bar'].set_color_white()
                 self.control.fixtures['flower'].set_color_white()
+            elif color == 'black':
+                self.control.fixtures['bar'].set_color_black()
+                self.control.fixtures['flower'].set_color_black()
 
 
 def main():

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from multiprocessing import Process
 
-from services.twitch_bot.main import main as twitch
+from services.twitch.main import main as twitch
 from services.dmx.main import main as dmx
 
 

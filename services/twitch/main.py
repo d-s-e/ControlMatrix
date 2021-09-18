@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from services.twitch_bot.bot import TwitchBot
+from services.twitch.bot import TwitchBot
 
 
 def main():

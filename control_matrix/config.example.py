@@ -1,7 +1,8 @@
 twitch = {
-    'access_token': '',
+    'bot_token': '',
+    'users_token': '',
     'client_id': '',
     'secret': '',
     'prefix': '',
-    'channel': '',
+    'channels': [],
 }
