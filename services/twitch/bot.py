@@ -25,6 +25,12 @@ class TwitchBot(commands.Bot):
 
         await self.handle_commands(message)
 
+    @commands.command(name='commands')
+    async def get_commands(self, ctx: commands.Context):
+        print(self.commands)
+        command_list = ' ?'.join(self.commands.keys())
+        await ctx.send(f'Available Commands:?{command_list}')
+
     @commands.command(name='hello')
     async def hello(self, ctx: commands.Context):
         await ctx.send(f'Hello {ctx.author.name}!')
