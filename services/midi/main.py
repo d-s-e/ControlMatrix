@@ -1,9 +1,16 @@
 #!/usr/bin/env python
+import logging
 import signal
-from control_matrix.queue import QueuePublisher
-from control_matrix.config import midi as config
+
+from control_matrix.service import ServiceBase
 from services.midi.midi import MidiControl
 
+
+logging.basicConfig(level = logging.INFO)
+log = logging.getLogger(__name__)
+
+
+COMMAND_LIST = []
 
 MAPPING = {
     36: ('dmx', 'color/red'),
@@ -18,38 +25,41 @@ MAPPING = {
 }
 
 
-class MidiService:
-    def __init__(self, port):
-        signal.signal(signal.SIGINT, self.cleanup)
-        signal.signal(signal.SIGTERM, self.cleanup)
-
-        # self.queue = QueuePublisher()
-        self.control = MidiControl(port, self.handle_message)
+class Service(ServiceBase):
+    def __init__(self):
+        from control_matrix.config import service_midi as config
+        self.in_port = config['in_port']
+        self.control = MidiControl(self.in_port, self.handle_midi_message)
+        super().__init__(config['name'], config['topic'], COMMAND_LIST, config['pub_url'])
 
     def cleanup(self, *args):
         self.control.close_port()
 
-    def handle_message(self, message):
+    def handle_midi_message(self, message):
         match message.type:
             case 'note_on':
                 try:
-                    cat, msg = MAPPING[message.note]
-                    # self.queue.send(cat, msg)
-                    print('MIDI:', cat, msg)
+                    topic, msg = MAPPING[message.note]
+                    self.queue.send(topic, msg)
                 except KeyError:
-                    print('MIDI: unmapped key:', message.note)
+                    log.info(f'unmapped key: {message.note}')
             case 'control_change':
-                print('MIDI: control:', f'{message.control} = {message.value}')
+                log.info(f'control change: {message.control} = {message.value}')
             case 'note_off':
                 pass
             case _:
-                print('MIDI: unmapped type:', message)
+                log.info(f'unmapped type: {message}')
+
+    def handle_config(self, options):
+        log.info(f'config -> {options}')
+
+    def handle_command(self, command, options):
+        log.info(f'{command} -> {options}')
 
 
 def main():
-    print('Starting MIDI Service')
-    port = config['in_port']
-    midi = MidiService(port)
+    log.info('Starting MIDI Service')
+    Service()
     signal.pause()
 
 

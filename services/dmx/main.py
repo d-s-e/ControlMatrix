@@ -1,63 +1,81 @@
 #!/usr/bin/env python
-from control_matrix.queue import QueueSubscriber
+import logging
+import signal
+
+from control_matrix.service import ServiceBase
+
 from services.dmx.dmx import DmxControl
 from services.dmx.fixtures.cameo_superfly_xs_5ch import CameoSuperflyXS
 from services.dmx.fixtures.stairville_led_bar_252_rgb import StairvilleLedBar252Rgb
 
+
+logging.basicConfig(level = logging.INFO)
+log = logging.getLogger(__name__)
+
+
+COMMAND_LIST = [
+    'color'
+]
 
 DELAY_IN_S = 1
 SHUTTER = 5
 ROTATION = 128
 
 
-class DmxService:
+class Service(ServiceBase):
     def __init__(self):
+        from control_matrix.config import service_dmx as config
+        self.config = config
         self.control = DmxControl()
         self.control.add_fixture('bar', StairvilleLedBar252Rgb, 1)
         self.control.add_fixture('flower', CameoSuperflyXS, 22)
         self.control.fixtures['flower'].set_rotation(ROTATION)
+        super().__init__(config['name'], config['topic'], COMMAND_LIST, config['pub_url'])
 
-    def execute_command(self, message):
-        _, command, *options = message.split('/')
-        print('DMX:', command, options)
+    def handle_config(self, options):
+        log.info(f'config -> {options}')
 
-        if command == 'color':
-            color = options[0]
-            if color == 'red':
-                self.control.fixtures['bar'].set_color_red()
-                self.control.fixtures['flower'].set_color_red()
-            elif color == 'green':
-                self.control.fixtures['bar'].set_color_green()
-                self.control.fixtures['flower'].set_color_green()
-            elif color == 'blue':
-                self.control.fixtures['bar'].set_color_blue()
-                self.control.fixtures['flower'].set_color_blue()
-            elif color == 'cyan':
-                self.control.fixtures['bar'].set_color(0x00,0xff, 0xff)
-                self.control.fixtures['flower'].set_color_black()
-            elif color == 'magenta':
-                self.control.fixtures['bar'].set_color(0xff,0x00, 0xff)
-                self.control.fixtures['flower'].set_color_black()
-            elif color == 'yellow':
-                self.control.fixtures['bar'].set_color(0xff,0xff, 0x00)
-                self.control.fixtures['flower'].set_color_black()
-            elif color == 'pink':
-                self.control.fixtures['bar'].set_color(0xff,0xc0, 0xcb)
-                self.control.fixtures['flower'].set_color_black()
-            elif color == 'white':
-                self.control.fixtures['bar'].set_color_white()
-                self.control.fixtures['flower'].set_color_white()
-            elif color == 'black':
-                self.control.fixtures['bar'].set_color_black()
-                self.control.fixtures['flower'].set_color_black()
+    def handle_command(self, command, options):
+        match command:
+            case 'color':
+                match options[0]:
+                    case 'red':
+                        self.control.fixtures['bar'].set_color_red()
+                        self.control.fixtures['flower'].set_color_red()
+                    case'green':
+                        self.control.fixtures['bar'].set_color_green()
+                        self.control.fixtures['flower'].set_color_green()
+                    case 'blue':
+                        self.control.fixtures['bar'].set_color_blue()
+                        self.control.fixtures['flower'].set_color_blue()
+                    case 'cyan':
+                        self.control.fixtures['bar'].set_color(0x00,0xff, 0xff)
+                        self.control.fixtures['flower'].set_color_black()
+                    case 'magenta':
+                        self.control.fixtures['bar'].set_color(0xff,0x00, 0xff)
+                        self.control.fixtures['flower'].set_color_black()
+                    case 'yellow':
+                        self.control.fixtures['bar'].set_color(0xff,0xff, 0x00)
+                        self.control.fixtures['flower'].set_color_black()
+                    case 'pink':
+                        self.control.fixtures['bar'].set_color(0xff,0xc0, 0xcb)
+                        self.control.fixtures['flower'].set_color_black()
+                    case 'white':
+                        self.control.fixtures['bar'].set_color_white()
+                        self.control.fixtures['flower'].set_color_white()
+                    case 'black':
+                        self.control.fixtures['bar'].set_color_black()
+                        self.control.fixtures['flower'].set_color_black()
+                    case _:
+                        log.info(f'unmapped color: {options[0]}')
+            case _:
+                log.info(f'unmapped command: {command} -> {options}')
 
 
 def main():
-    print('Starting DMX Service')
-
-    dmx = DmxService()
-    sub = QueueSubscriber('dmx', dmx.execute_command)
-    sub.start()
+    log.info('Starting DMX Service')
+    Service()
+    signal.pause()
 
 
 if __name__ == '__main__':

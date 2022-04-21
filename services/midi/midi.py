@@ -1,23 +1,29 @@
+import logging
 import mido
 
 
+logging.basicConfig(level = logging.DEBUG)
+log = logging.getLogger(__name__)
+
+
 class MidiControl:
-    def __init__(self, port, callback):
-        self.port = port
+    def __init__(self, in_port, callback):
+        self.in_port = in_port
         self.open_port()
         self.set_callback(callback)
 
     def set_callback(self, callback):
-        self._in_port.callback = callback
+        self.in_port.callback = callback
 
     def clear_callback(self):
-        self._in_port = None
+        self.in_port = None
 
     def open_port(self):
-        self._in_port = mido.open_input(self.port)
+        self.in_port = mido.open_input(self.in_port)
 
     def close_port(self):
-        self._in_port.close()
+        self.in_port.close()
 
-    def get_in_ports(self):
+    @staticmethod
+    def get_in_ports():
         return mido.get_input_names()

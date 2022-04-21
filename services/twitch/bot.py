@@ -1,12 +1,16 @@
+import logging
 from twitchio.ext import commands
 
-from control_matrix.queue import QueuePublisher
-from control_matrix.config import twitch as config
+from control_matrix.config import service_twitch as config
+
+
+logging.basicConfig(level = logging.INFO)
+log = logging.getLogger(__name__)
 
 
 class TwitchBot(commands.Bot):
-    def __init__(self):
-        self.queue = QueuePublisher()
+    def __init__(self, queue):
+        self.queue = queue
         super().__init__(token=config['bot_token'],
                          prefix=config['prefix'],
                          initial_channels=config['channels'],
@@ -15,19 +19,15 @@ class TwitchBot(commands.Bot):
                          )
 
     async def event_ready(self):
-        print(f'Twitch: Logged in as {self.nick}')
+        pass
 
     async def event_message(self, message):
         if message.echo:
             return
-
-        print('Twitch: Message', message.content)
-
         await self.handle_commands(message)
 
     @commands.command(name='commands')
     async def get_commands(self, ctx: commands.Context):
-        print(self.commands)
         command_list = ' ?'.join(self.commands.keys())
         await ctx.send(f'Available Commands:?{command_list}')
 
