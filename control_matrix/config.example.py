@@ -6,3 +6,7 @@ twitch = {
     'prefix': '',
     'channels': [],
 }
+
+midi = {
+    'in_port': ''
+}
