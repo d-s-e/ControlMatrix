@@ -9,14 +9,15 @@ log = logging.getLogger(__name__)
 
 
 class ServiceBase:
-    def __init__(self, name: str, topic: str, commands: list = None, pub_url: str = None):
+    """Base class that each Service must inherit from"""
+    def __init__(self, name: str, topic: str, commands: list = None, pub_port: str = None):
         self.name = name
         self.topic = topic
         self.commands = commands
-        self.pub_url = pub_url
+        self.pub_port = pub_port
         self.sub_socket = None
         self.pub_socket = None
-        self.queue = QueuePublisher(self.pub_url) if self.pub_url else None
+        self.queue = QueuePublisher(self.pub_port) if self.pub_port else None
         self.thread_sub_master = Thread(target=self.subscribe_to_master)
         self.thread_sub_master.start()
 

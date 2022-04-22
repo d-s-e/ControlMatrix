@@ -9,13 +9,16 @@ docopt==0.6.2
 idna==3.2
 jaraco.classes==3.2.1
 jaraco.collections==3.4.0
+jaraco.context==4.1.1
 jaraco.functools==3.3.0
 jaraco.logging==3.1.0
 jaraco.stream==3.0.2
 jaraco.text==3.5.1
+mido==1.2.10
 more-itertools==8.9.0
 multidict==5.1.0
 pyserial==3.5
+python-rtmidi==1.4.9
 pytz==2021.1
 pyzmq==22.3.0
 requests==2.26.0

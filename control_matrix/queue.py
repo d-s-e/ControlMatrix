@@ -1,13 +1,13 @@
 import zmq
 
-
-MASTER_PUB_URL = 'tcp://*:5556'
-MASTER_SUB_URL = 'tcp://localhost:5556'
+MASTER_PORT = '5556'
+PUB_URL = 'tcp://*'
+SUB_URL = 'tcp://localhost'
 
 
 class QueuePublisher:
-    def __init__(self, pub_url=MASTER_PUB_URL):
-        self.pub_url = pub_url
+    def __init__(self, pub_port=MASTER_PORT):
+        self.pub_url = f'{PUB_URL}:{pub_port}'
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.PUB)
         self.socket.bind(self.pub_url)
@@ -20,10 +20,10 @@ class QueuePublisher:
 
 
 class QueueSubscriber:
-    def __init__(self, topic, callback, sub_url=MASTER_SUB_URL):
+    def __init__(self, topic, callback, sub_port=MASTER_PORT):
         self.topic = topic
         self.callback = callback
-        self.sub_url = sub_url
+        self.sub_url = f'{SUB_URL}:{sub_port}'
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.SUB)
         self.socket.connect(self.sub_url)

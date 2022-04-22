@@ -6,11 +6,9 @@ from control_matrix.service import ServiceBase
 from services.midi.midi import MidiControl
 
 
-logging.basicConfig(level = logging.INFO)
+logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-
-COMMAND_LIST = []
 
 MAPPING = {
     36: ('dmx', 'color/red'),
@@ -26,11 +24,17 @@ MAPPING = {
 
 
 class Service(ServiceBase):
+    name = 'MIDI Service'
+    topic = 'midi'
+    pub_port = '5562'
+    is_enabled = True
+    commands = []
+
     def __init__(self):
         from control_matrix.config import service_midi as config
         self.in_port = config['in_port']
         self.control = MidiControl(self.in_port, self.handle_midi_message)
-        super().__init__(config['name'], config['topic'], COMMAND_LIST, config['pub_url'])
+        super().__init__(self.name, self.topic, self.commands, self.pub_port)
 
     def cleanup(self, *args):
         self.control.close_port()

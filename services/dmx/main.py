@@ -9,13 +9,9 @@ from services.dmx.fixtures.cameo_superfly_xs_5ch import CameoSuperflyXS
 from services.dmx.fixtures.stairville_led_bar_252_rgb import StairvilleLedBar252Rgb
 
 
-logging.basicConfig(level = logging.INFO)
+logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-
-COMMAND_LIST = [
-    'color'
-]
 
 DELAY_IN_S = 1
 SHUTTER = 5
@@ -23,6 +19,14 @@ ROTATION = 128
 
 
 class Service(ServiceBase):
+    name = 'DMX Service'
+    topic = 'dmx'
+    pub_port = ''
+    is_enabled = True
+    commands = [
+        'color'
+    ]
+
     def __init__(self):
         from control_matrix.config import service_dmx as config
         self.config = config
@@ -30,7 +34,7 @@ class Service(ServiceBase):
         self.control.add_fixture('bar', StairvilleLedBar252Rgb, 1)
         self.control.add_fixture('flower', CameoSuperflyXS, 22)
         self.control.fixtures['flower'].set_rotation(ROTATION)
-        super().__init__(config['name'], config['topic'], COMMAND_LIST, config['pub_url'])
+        super().__init__(self.name, self.topic, self.commands, self.pub_port)
 
     def handle_config(self, options):
         log.info(f'config -> {options}')
@@ -49,16 +53,16 @@ class Service(ServiceBase):
                         self.control.fixtures['bar'].set_color_blue()
                         self.control.fixtures['flower'].set_color_blue()
                     case 'cyan':
-                        self.control.fixtures['bar'].set_color(0x00,0xff, 0xff)
+                        self.control.fixtures['bar'].set_color(0x00, 0xff, 0xff)
                         self.control.fixtures['flower'].set_color_black()
                     case 'magenta':
-                        self.control.fixtures['bar'].set_color(0xff,0x00, 0xff)
+                        self.control.fixtures['bar'].set_color(0xff, 0x00, 0xff)
                         self.control.fixtures['flower'].set_color_black()
                     case 'yellow':
-                        self.control.fixtures['bar'].set_color(0xff,0xff, 0x00)
+                        self.control.fixtures['bar'].set_color(0xff, 0xff, 0x00)
                         self.control.fixtures['flower'].set_color_black()
                     case 'pink':
-                        self.control.fixtures['bar'].set_color(0xff,0xc0, 0xcb)
+                        self.control.fixtures['bar'].set_color(0xff, 0xc0, 0xcb)
                         self.control.fixtures['flower'].set_color_black()
                     case 'white':
                         self.control.fixtures['bar'].set_color_white()
