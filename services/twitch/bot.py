@@ -29,7 +29,7 @@ class TwitchBot(commands.Bot):
     @commands.command(name='commands')
     async def get_commands(self, ctx: commands.Context):
         command_list = ' ?'.join(self.commands.keys())
-        await ctx.send(f'Available Commands:?{command_list}')
+        await ctx.send(f'You can control my lights and do other things. Just type one of the following commands: ?{command_list}')
 
     @commands.command(name='hello')
     async def hello(self, ctx: commands.Context):
