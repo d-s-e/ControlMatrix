@@ -34,17 +34,6 @@ class DmxFixture:
     def reset(self):
         raise NotImplementedError
 
-    def set_mode(self, mode: int, submit=True):
-        raise NotImplementedError
-
-    def set_color(self, red, green, blue):
-        raise NotImplementedError
-
-    def set_shutter(self, level: int, submit=True):
-        raise NotImplementedError
-
-    def set_speed(self, level: int, submit=True):
-        raise NotImplementedError
 
 class DmxChaser:
     pass

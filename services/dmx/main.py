@@ -7,6 +7,7 @@ from control_matrix.service import ServiceBase
 from services.dmx.dmx import DmxControl
 from services.dmx.fixtures.cameo_superfly_xs_5ch import CameoSuperflyXS
 from services.dmx.fixtures.stairville_led_bar_252_rgb import StairvilleLedBar252Rgb
+from services.dmx.fixtures.stairville_afh_600 import StairvilleAFH600
 
 
 logging.basicConfig(level=logging.INFO)
@@ -33,6 +34,7 @@ class Service(ServiceBase):
         self.control = DmxControl()
         self.control.add_fixture('bar', StairvilleLedBar252Rgb, 1)
         self.control.add_fixture('flower', CameoSuperflyXS, 22)
+        self.control.add_fixture('smoke', StairvilleAFH600, 16)
         self.control.fixtures['flower'].set_rotation(ROTATION)
         super().__init__(self.name, self.topic, self.commands, self.pub_port)
 
@@ -72,6 +74,12 @@ class Service(ServiceBase):
                         self.control.fixtures['flower'].set_color_black()
                     case _:
                         log.info(f'unmapped color: {options[0]}')
+            case 'smoke':
+                match options[0]:
+                    case 'toggle':
+                        self.control.fixtures['smoke'].toggle_smoke()
+                    case _:
+                        log.info(f'unmapped smoke: {options[0]}')
             case _:
                 log.info(f'unmapped command: {command} -> {options}')
 

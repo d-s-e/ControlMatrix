@@ -9,8 +9,8 @@ from services.midi.midi import MidiControl
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-
 MAPPING = {
+    # Korg nanoPAD2 lower pad row
     36: ('dmx', 'color/red'),
     38: ('dmx', 'color/green'),
     40: ('dmx', 'color/blue'),
@@ -19,6 +19,14 @@ MAPPING = {
     46: ('dmx', 'color/yellow'),
     48: ('dmx', 'color/pink'),
     50: ('dmx', 'color/white'),
+    # Korg nanoPAD2 upper pad row
+    37: ('dmx', 'smoke/toggle'),
+    39: ('twitch', 'message/info_sm'),
+    41: ('twitch', 'message/info_di'),
+    # 43: ('', ''),
+    # 45: ('', ''),
+    # 47: ('', ''),
+    # 49: ('', ''),
     51: ('dmx', 'color/black'),
 }
 
