@@ -11,7 +11,7 @@ from control_matrix.queue import QueueSubscriber, QueuePublisher
 
 
 logging.basicConfig(level=logging.INFO)
-log = logging.getLogger('ControlMatrix')
+log = logging.getLogger("ControlMatrix")
 
 
 class Subscription(Thread):
@@ -20,10 +20,10 @@ class Subscription(Thread):
         self.stop_flag = Event()
         self.name = name
         self.handler = handler
-        self.socket = QueueSubscriber('', self.handle_message, sub_port, self.stop_flag)
+        self.socket = QueueSubscriber("", self.handle_message, sub_port, self.stop_flag)
 
     def handle_message(self, message):
-        log.info(f' <-- {self.name : <10} | {message}')
+        log.info(f" <-- {self.name : <10} | {message}")
         self.handler(message)
 
     def run(self):
@@ -43,12 +43,14 @@ class ControlMatrix:
         self.queue = QueuePublisher()
 
     def load_services(self):
-        for _, name, is_pkg in pkgutil.iter_modules(self.services_pkg.__path__, self.services_pkg.__name__ + '.'):
-            module = importlib.import_module(f'{name}.main')
+        for _, name, is_pkg in pkgutil.iter_modules(
+            self.services_pkg.__path__, self.services_pkg.__name__ + "."
+        ):
+            module = importlib.import_module(f"{name}.main")
             try:
-                service_cls = getattr(module, 'Service')
+                service_cls = getattr(module, "Service")
                 self.services[name] = service_cls
-                log.info(f'Loading {service_cls.name}')
+                log.info(f"Loading {service_cls.name}")
             except AttributeError:
                 pass
 
@@ -58,12 +60,14 @@ class ControlMatrix:
     def run(self):
         self.threads = [
             Subscription(name, service.pub_port, self.forward_handler)
-            for name, service in self.services.items() if service.is_enabled and service.pub_port
+            for name, service in self.services.items()
+            if service.is_enabled and service.pub_port
         ]
 
         self.processes = [
             Process(target=service, name=name)
-            for name, service in self.services.items() if service.is_enabled
+            for name, service in self.services.items()
+            if service.is_enabled
         ]
 
         for thread in self.threads:
@@ -83,11 +87,11 @@ class ControlMatrix:
             thread.stop_flag.set()
 
     def forward_handler(self, message):
-        log.info(f' --> master    | {message}')
+        log.info(f" --> master    | {message}")
         self.queue.send_raw(message)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     ctrl = ControlMatrix()
     ctrl.load_services()
     ctrl.run()

@@ -2,7 +2,7 @@ import logging
 import mido
 
 
-logging.basicConfig(level = logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
 
 

@@ -21,14 +21,14 @@ class EurolitePar65Rgb(DmxFixture):
 
     def set_mode(self, mode: int, submit=True):
         """
-             0 -  31    Dimmer
-            32-   63    Decreasing Brightness
-            64 -  95    Increasing Brightness
-            96 - 127    Decreasing then increasing Brightness
-           128 - 159    Auto color mix
-           160 - 191    3 color flash
-           192 - 223    7 color flash
-           224 - 255    Sound control
+          0 -  31    Dimmer
+         32-   63    Decreasing Brightness
+         64 -  95    Increasing Brightness
+         96 - 127    Decreasing then increasing Brightness
+        128 - 159    Auto color mix
+        160 - 191    3 color flash
+        192 - 223    7 color flash
+        224 - 255    Sound control
         """
         self.set_channel(Channels.MODE, mode, submit)
 

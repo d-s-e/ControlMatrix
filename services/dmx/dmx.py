@@ -7,7 +7,7 @@ class DmxControl:
         signal.signal(signal.SIGINT, self.cleanup)
         signal.signal(signal.SIGTERM, self.cleanup)
         self.fixtures = {}
-        self.dmx = Controller('/dev/ttyUSB0')
+        self.dmx = Controller("/dev/ttyUSB0")
 
     def add_fixture(self, name, fixture, channel):
         self.fixtures[name] = fixture(channel, self.dmx)

@@ -14,7 +14,7 @@ class SubMasterThread(Thread):
         self.stop_flag = Event()
         self.topic = topic
         self.handler = handler
-        self.socket = QueueSubscriber(self.topic, self.handler, stop_flag = self.stop_flag)
+        self.socket = QueueSubscriber(self.topic, self.handler, stop_flag=self.stop_flag)
 
     def run(self):
         self.socket.start()
@@ -23,11 +23,11 @@ class SubMasterThread(Thread):
 class ServiceBase:
     """Base class that each Service must inherit from"""
 
-    name : str = ''
-    topic : str = ''
-    pub_port : str = ''
-    is_enabled : bool = False
-    commands : list = []
+    name: str = ""
+    topic: str = ""
+    pub_port: str = ""
+    is_enabled: bool = False
+    commands: list = []
 
     def __init__(self, name: str, topic: str, commands: list = None, pub_port: str = None):
         signal.signal(signal.SIGINT, self.handle_shutdown)
@@ -42,11 +42,11 @@ class ServiceBase:
         self.thread_sub_master.start()
 
     def _message_handler(self, message):
-        topic, command, *options = message.split('/')
+        topic, command, *options = message.split("/")
         match command:
-            case 'config':
+            case "config":
                 self.handle_config(options)
-            case 'shutdown':
+            case "shutdown":
                 self.handle_shutdown()
             case _:
                 self.handle_command(command, options)

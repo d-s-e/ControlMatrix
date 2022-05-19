@@ -25,13 +25,13 @@ class StairvilleLedBar252Rgb(DmxFixture):
 
     def set_mode(self, mode: int, submit=True):
         """
-             0 -  40    Blackout
-            41 -  80    3-Segment-Mode
-            81 - 120    1-Segment-Mode
-           121 - 160    Strobe-Effect
-           161 - 200    Color-Change
-           201 - 240    Color-Flow
-           241 - 255    Color-Change
+          0 -  40    Blackout
+         41 -  80    3-Segment-Mode
+         81 - 120    1-Segment-Mode
+        121 - 160    Strobe-Effect
+        161 - 200    Color-Change
+        201 - 240    Color-Flow
+        241 - 255    Color-Change
         """
         self.set_channel(Channels.MODE, mode, submit)
 

@@ -35,15 +35,15 @@ class CameoSuperflyXS(DmxFixture):
 
     def set_shutter(self, value: int, submit=True):
         """
-            0 -   5 No Function
-            6 - 255 Strobe 1 Hz - 20 Hz
+        0 -   5 No Function
+        6 - 255 Strobe 1 Hz - 20 Hz
         """
         self.set_channel(Channels.LED_STROBE, value, submit)
 
     def set_rotation(self, value, submit=True):
         """
-              0 - 5   No Function
-              6 - 127 Motor indexing
-            128 - 255 Motor rotation (slow - fast)
+          0 - 5   No Function
+          6 - 127 Motor indexing
+        128 - 255 Motor rotation (slow - fast)
         """
         self.set_channel(Channels.LED_ROTATION, value, submit)
