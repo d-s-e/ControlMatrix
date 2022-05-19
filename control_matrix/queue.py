@@ -1,4 +1,7 @@
+import time
 import zmq
+from threading import Event
+
 
 MASTER_PORT = '5556'
 PUB_URL = 'tcp://*'
@@ -20,7 +23,8 @@ class QueuePublisher:
 
 
 class QueueSubscriber:
-    def __init__(self, topic, callback, sub_port=MASTER_PORT):
+    def __init__(self, topic, callback, sub_port = MASTER_PORT, stop_flag: Event = None):
+        self.stop_flag = stop_flag or Event()
         self.topic = topic
         self.callback = callback
         self.sub_url = f'{SUB_URL}:{sub_port}'
@@ -30,6 +34,9 @@ class QueueSubscriber:
         self.socket.setsockopt_string(zmq.SUBSCRIBE, self.topic)
 
     def start(self):
-        while True:
-            message = self.socket.recv_string()
-            self.callback(message)
+        while not self.stop_flag.is_set():
+            try:
+                message = self.socket.recv_string(zmq.NOBLOCK)
+                self.callback(message)
+            except zmq.Again:
+                time.sleep(0.2)

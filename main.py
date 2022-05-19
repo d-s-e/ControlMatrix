@@ -4,7 +4,7 @@ import logging
 import pkgutil
 import signal
 from multiprocessing import Process
-from threading import Thread
+from threading import Event, Thread
 
 import services as services_package
 from control_matrix.queue import QueueSubscriber, QueuePublisher
@@ -14,16 +14,20 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger('ControlMatrix')
 
 
-class Subscription:
+class Subscription(Thread):
     def __init__(self, name, sub_port, handler):
+        super().__init__()
+        self.stop_flag = Event()
         self.name = name
         self.handler = handler
-        self.socket = QueueSubscriber('', self.handle_message, sub_port)
-        self.socket.start()
+        self.socket = QueueSubscriber('', self.handle_message, sub_port, self.stop_flag)
 
     def handle_message(self, message):
         log.info(f' <-- {self.name : <10} | {message}')
         self.handler(message)
+
+    def run(self):
+        self.socket.start()
 
 
 class ControlMatrix:
@@ -53,7 +57,7 @@ class ControlMatrix:
 
     def run(self):
         self.threads = [
-            Thread(target=Subscription, args=(name, service.pub_port, self.forward_handler))
+            Subscription(name, service.pub_port, self.forward_handler)
             for name, service in self.services.items() if service.is_enabled and service.pub_port
         ]
 
@@ -74,9 +78,9 @@ class ControlMatrix:
         for thread in self.threads:
             thread.join()
 
-    @staticmethod
-    def stop(*args):
-        print('ending ...')
+    def stop(self, *args):
+        for thread in self.threads:
+            thread.stop_flag.set()
 
     def forward_handler(self, message):
         log.info(f' --> master    | {message}')
